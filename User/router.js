@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 
 const router = new Router()
 
-
+//Sign-up router: user signs up with name email and password, password gets encrypted, user-row is created in database 
 router.post('/signup', (req, res, next) => {
   const { name, email, password} = req.body
   if(!name || !email || !password) {

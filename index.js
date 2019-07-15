@@ -6,6 +6,7 @@ const db = require('./db')
 const authRouter = require('./auth/router')
 const userRouter = require('./User/router')
 const eventRouter = require('./Event/router')
+const ticketRouter = require('./Ticket/router')
 
 
 
@@ -19,6 +20,7 @@ app.use(jsonParser)
 app.use(authRouter)
 app.use(userRouter)
 app.use(eventRouter)
+app.use(ticketRouter)
 
 
 

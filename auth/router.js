@@ -6,6 +6,7 @@ const auth = require('./middleware')
 
 const router = new Router()
 
+//login router: user enters email and password, find user with matching email in database, compares password with encrypted one, 
 router.post('/login', (req, res, next) => {
   const { email, password } = req.body
   

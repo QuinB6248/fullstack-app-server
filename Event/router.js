@@ -4,6 +4,8 @@ const auth = require('../auth/middleware')
 
 const router = new Router()
 
+
+// get all events
 router.get('/events', (req, res, next) => {
   Event
     .findAll()
@@ -16,9 +18,11 @@ router.get('/events', (req, res, next) => {
     .catch(err => next(err))
 })
 
-router.post('/events', (req, res, next) => {
+//with authentication create an event
+router.post('/events', auth, (req, res, next) => {
+  const authUserId = req.user.id
   Event
-    .create(req.body)
+    .create({...req.body, userId: authUserId})
     .then(events => {
       if (!events) {
         res.status(400).send({ message: 'No events found' })
@@ -28,6 +32,7 @@ router.post('/events', (req, res, next) => {
     .catch(err => next(err))
 })
 
+//get an event see list of tickets
 router.get('/events/:id', (req, res, next) => {
   const id = req.params.id
   Event
@@ -40,6 +45,8 @@ router.get('/events/:id', (req, res, next) => {
     })
     .catch(err => next(err))
 })
+
+
 
 router.put('/events/:id', (req, res, next) => {
   const id = req.params.id
