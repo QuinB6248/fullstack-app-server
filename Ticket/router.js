@@ -3,6 +3,7 @@ const Ticket = require('./model')
 const Event = require('../Event/model')
 const auth = require('../auth/middleware')
 
+
 const router = new Router()
 
 

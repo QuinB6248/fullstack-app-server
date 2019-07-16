@@ -1,22 +1,39 @@
 const { Router } = require('express')
 const Event = require('./model')
 const auth = require('../auth/middleware')
+const Sequelize = require('sequelize')
+
 
 const router = new Router()
 
 
+
+
 // get all events
 router.get('/events', (req, res, next) => {
-  Event
-    .findAll()
-    .then(events => {
+  const limit = req.query.limit || 3
+  const offset = req.query.offset || 0
+  const data = new Date().toISOString().split('T')[0]
+  const Op = Sequelize.Op
+
+  console.log('DATAA', d)
+  Promise.all([
+    Event.count(),
+    Event.findAll({ limit, offset, where: {end: {[Op.gte]: data}} }) // sequelize operator gte = greater or equel then current date
+  ])
+    .then(([total, events]) => {
       if (!events) {
         res.status(400).send({ message: 'No events found' })
       }
-      res.send(events)
+      
+      const numOfPages = total / limit
+      res.send({events, total, numOfPages})
     })
     .catch(err => next(err))
 })
+
+
+
 
 //with authentication create an event
 router.post('/events', auth, (req, res, next) => {
