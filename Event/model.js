@@ -14,13 +14,16 @@ const Event = sequelize.define('event', {
     type: Sequelize.STRING
   },
   start: {
-    type: Sequelize.DATEONLY
+    type: Sequelize.DATEONLY,
+    allowNull: false
   },
   end: {
-    type: Sequelize.DATEONLY
+    type: Sequelize.DATEONLY,
+    allowNull: false
   },
   avg_price: {
-    type: Sequelize.DECIMAL
+    type: Sequelize.DECIMAL,
+    allowNull: false
   }
 }, {
   timestamps: false,
