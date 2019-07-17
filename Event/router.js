@@ -7,19 +7,19 @@ const Sequelize = require('sequelize')
 const router = new Router()
 
 
-
-
 // get all events
 router.get('/events', (req, res, next) => {
   const limit = req.query.limit || 3
   const offset = req.query.offset || 0
-  const data = new Date().toISOString().split('T')[0]
+  const curDate = new Date().toISOString().split('T')[0]
+  const curTime = new Date().toISOString().split('T')[1]
+  console.log('CURTIME', curTime.split(':')[0])
+
   const Op = Sequelize.Op
 
-  console.log('DATAA', d)
   Promise.all([
     Event.count(),
-    Event.findAll({ limit, offset, where: {end: {[Op.gte]: data}} }) // sequelize operator gte = greater or equel then current date
+    Event.findAll({ limit, offset, where: {end: {[Op.gte]: curDate}} }) // sequelize operator gte = greater or equel then current date
   ])
     .then(([total, events]) => {
       if (!events) {
@@ -50,18 +50,18 @@ router.post('/events', auth, (req, res, next) => {
 })
 
 //get an event see list of tickets
-router.get('/events/:id', (req, res, next) => {
-  const id = req.params.id
-  Event
-    .findByPk(id)
-    .then(event => {
-      if (!event) {
-        res.status(400).send({ message: 'No event found' })
-      }
-      res.send(event)
-    })
-    .catch(err => next(err))
-})
+// router.get('/events/:id', (req, res, next) => {
+//   const id = req.params.id
+//   Event
+//     .findByPk(id)
+//     .then(event => {
+//       if (!event) {
+//         res.status(400).send({ message: 'No event found' })
+//       }
+//       res.send(event)
+//     })
+//     .catch(err => next(err))
+// })
 
 
 
