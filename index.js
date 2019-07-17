@@ -7,6 +7,7 @@ const authRouter = require('./auth/router')
 const userRouter = require('./User/router')
 const eventRouter = require('./Event/router')
 const ticketRouter = require('./Ticket/router')
+const commentRouter = require('./Comment/router')
 
 
 
@@ -21,6 +22,7 @@ app.use(authRouter)
 app.use(userRouter)
 app.use(eventRouter)
 app.use(ticketRouter)
+app.use(commentRouter)
 
 
 
