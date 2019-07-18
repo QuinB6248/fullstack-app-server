@@ -26,7 +26,7 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
           //Checks how many tickets user has
           const userCount = tickets.map(ticket => ticket.userId)
           const userNumberOfTickets = userCount.length
-          //If user has more then one ticket, 10 will be added to riskStatus
+          //If user has more then one ticket, 10% will be added to riskStatus
           let riskStatus = 5
           userNumberOfTickets > 1? riskStatus += 10 : riskStatus 
           //Get percentage of price by dividing it with the average price

@@ -33,6 +33,13 @@ router.post('/events/:id/tickets', auth, (req, res, next) => {
       if(!ticket) {
         return res.status(400).send({ message: 'No ticket found' })
       }
+      //if the ticket was added during business hours (9-17), deduct 10% from the risk, if not, add 10% to the risk
+      const curTime = new Date().toISOString().split('T')[1]
+      const curHour = curTime.split(':')[0]
+      let riskHour
+      curHour < 9 || curHour > 17 ? riskHour = 10: riskHour = -10
+      
+      
       res.send(ticket)
     })
     .catch(err => next(err))
