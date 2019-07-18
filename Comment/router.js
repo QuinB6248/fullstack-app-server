@@ -22,7 +22,16 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
      Comment
       .findAll({where: {ticketId: ticketId}, include: [User]})
       .then(comments => {
-      res.send({ticket, comments})
+      res.send({event:ticket.event, 
+                ticket:{
+                  id: ticket.id,
+                  description: ticket.description,
+                  image: ticket.image,
+                  price: ticket.price,
+                  eventId: ticket.eventId,
+                  userId: ticket.userId
+                }, 
+                comments})
 
       })
       

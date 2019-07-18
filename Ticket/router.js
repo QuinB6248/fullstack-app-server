@@ -55,14 +55,14 @@ router.get('/events/:id/tickets/:ticketId', (req, res, next) => {
 })
 
 
-router.put('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
+router.patch('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
   const id = parseInt(req.params.id) 
   const ticketId = parseInt(req.params.ticketId)
-  
+  console.log('REQBODY', req.body)
   Ticket
-    .findByPk(ticketId, {where: {eventId: id}})
+    .findByPk(ticketId, {where: {eventId: id}, include: [Event]})
     .then(ticket => {
-      if(!ticket || ticket.eventId !== id) {
+      if(ticket.eventId !== id) {
         return res.status(400).send({ message: 'No ticket found' })
       }else if (ticket.userId !== req.user.id){
         return res.status(401).send({ message: 'You are not authorized' })
@@ -75,7 +75,6 @@ router.put('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
       })
       .catch(err => next(err))
 })
-
 
 router.delete('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
   const id = parseInt(req.params.id) 

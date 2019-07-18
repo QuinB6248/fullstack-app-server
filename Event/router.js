@@ -49,21 +49,6 @@ router.post('/events', auth, (req, res, next) => {
     .catch(err => next(err))
 })
 
-//get an event see list of tickets
-// router.get('/events/:id', (req, res, next) => {
-//   const id = req.params.id
-//   Event
-//     .findByPk(id)
-//     .then(event => {
-//       if (!event) {
-//         res.status(400).send({ message: 'No event found' })
-//       }
-//       res.send(event)
-//     })
-//     .catch(err => next(err))
-// })
-
-
 
 router.put('/events/:id', (req, res, next) => {
   const id = req.params.id
