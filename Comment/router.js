@@ -19,24 +19,33 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
       if(!ticket || ticket.eventId !== id) {
         return res.status(400).send({ message: 'No ticket found' })
       }
-     Comment
-      .findAll({where: {ticketId: ticketId}, include: [User]})
-      .then(comments => {
-      res.send({event:ticket.event, 
+      Ticket
+        .findAll({where: {userId: ticket.userId}})
+        .then(tickets => {
+          const userCount = tickets.map(ticket => ticket.userId)
+          const userNumberOfTickets = userCount.length
+          Comment
+          .findAll({where: {ticketId: ticketId}, include: [User]})
+          .then(comments => {
+            res.send({
+                event:ticket.event, 
                 ticket:{
-                  id: ticket.id,
-                  description: ticket.description,
-                  image: ticket.image,
-                  price: ticket.price,
-                  eventId: ticket.eventId,
-                  userId: ticket.userId
+                id: ticket.id,
+                description: ticket.description,
+                image: ticket.image,
+                price: ticket.price,
+                eventId: ticket.eventId,
+                userId: ticket.userId
                 }, 
-                comments})
-
-      })
-      
+                comments,
+                userNumberOfTickets
+            })
+        })
     })
-    .catch(err => next(err))
+
+     
+  })
+  .catch(err => next(err))
 })
 
 router.post('/events/:id/tickets/:ticketId/comments', auth, (req, res, next) => {
@@ -103,3 +112,16 @@ module.exports = router
 
 
 
+// const userComment = 
+//             comments
+//               .map(comment => comment.userId)
+//           const countCommentsUser = 
+//             userComment
+//               .reduce(function (allUsersComments, userId) { 
+//                 if (userId in allUsersComments) {
+//                   allUsersComments[userId]++;
+//                 }else {
+//                   allUsersComments[userId] = 1;
+//                 }
+//                 return allUsersComments;
+//               }, {}); 
