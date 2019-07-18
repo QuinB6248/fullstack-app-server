@@ -22,12 +22,35 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
       Ticket
         .findAll({where: {userId: ticket.userId}})
         .then(tickets => {
+
+          //Checks how many tickets user has
           const userCount = tickets.map(ticket => ticket.userId)
           const userNumberOfTickets = userCount.length
+          //If user has more then one ticket, 10 will be added to riskStatus
+          let riskStatus = 5
+          userNumberOfTickets > 1? riskStatus += 10 : riskStatus 
+          //Get percentage of price by dividing it with the average price
+          const priceTicket = ticket.price
+          const avgPrice = ticket.event.avg_price
+          const percentage = Math.floor(priceTicket/avgPrice*100);
+          //deduct 100% of percentage to get the amount of percentage higher or lower then average price(100%)
+          let priceDif = -(percentage - 100)
+          //maximum of 10% deduction
+          priceDif < -10 ? priceDif = -10 : priceDif
+          //add (or subtract) amount of risk (riskStatus)
+          riskStatus += priceDif
+          //Check if riskStatus is not higher then 95% or lower then 5%
+          riskStatus > 95? riskStatus=95 : riskStatus < 5? riskStatus=5 : riskStatus
+        
           Comment
-          .findAll({where: {ticketId: ticketId}, include: [User]})
-          .then(comments => {
-            res.send({
+            .findAll({where: {ticketId: ticketId}, include: [User]})
+            .then(comments => {
+              //if there are >3 comments on the ticket, add 5% to the risk
+              comments.length > 3? riskStatus += 5 : riskStatus
+              riskStatus > 95? riskStatus=95: riskStatus
+
+
+              res.send({
                 event:ticket.event, 
                 ticket:{
                 id: ticket.id,
@@ -38,8 +61,10 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
                 userId: ticket.userId
                 }, 
                 comments,
+                riskStatus,
                 userNumberOfTickets
-            })
+                
+              })
         })
     })
 
