@@ -47,7 +47,10 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
             .then(comments => {
               //if there are >3 comments on the ticket, add 5% to the risk
               comments.length > 3? riskStatus += 5 : riskStatus
-              riskStatus > 95? riskStatus=95: riskStatus
+              riskStatus > 95? riskStatus= 95: riskStatus
+              ticket.risk = riskStatus
+              ticket.save().then(() => {})
+
 
 
               res.send({
@@ -58,7 +61,8 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
                 image: ticket.image,
                 price: ticket.price,
                 eventId: ticket.eventId,
-                userId: ticket.userId
+                userId: ticket.userId,
+                risk: ticket.risk
                 }, 
                 comments,
                 riskStatus,
