@@ -14,10 +14,14 @@ const Ticket = sequelize.define('ticket', {
   },
   description: {
     type: Sequelize.STRING
-  }
+  },
+  risk: {
+    type: Sequelize.INTEGER
+  },
+
 }, {
   timestamps: false,
-  tableName: 'tickets'
+  
 })
 
 Ticket.belongsTo(User)
