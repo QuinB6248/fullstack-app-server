@@ -2,8 +2,6 @@ const { Router } = require('express')
 const Ticket = require('./model')
 const Event = require('../Event/model')
 const auth = require('../auth/middleware')
-const Comment = require('../Comment/model')
-
 
 const router = new Router()
 
@@ -38,9 +36,9 @@ router.post('/events/:id/tickets', auth, (req, res, next) => {
       const curHour = curTime.split(':')[0]
       let riskHour
       curHour < 9 || curHour > 17 ? riskHour = 10: riskHour = -10
-      ticket.risk = riskHour
+      ticket.riskHour = riskHour
+      console.log('riskHour',curHour)
       ticket.save().then(() => {})
-      
       
       res.send(ticket)
     })
@@ -67,7 +65,7 @@ router.get('/events/:id/tickets/:ticketId', (req, res, next) => {
 router.patch('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
   const id = parseInt(req.params.id) 
   const ticketId = parseInt(req.params.ticketId)
-  console.log('REQBODY', req.body)
+  
   Ticket
     .findByPk(ticketId, {where: {eventId: id}, include: [Event]})
     .then(ticket => {
@@ -84,6 +82,7 @@ router.patch('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
       })
       .catch(err => next(err))
 })
+
 
 router.delete('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
   const id = parseInt(req.params.id) 
