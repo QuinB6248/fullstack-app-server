@@ -38,7 +38,8 @@ router.post('/events/:id/tickets', auth, (req, res, next) => {
       const curHour = curTime.split(':')[0]
       let riskHour
       curHour < 9 || curHour > 17 ? riskHour = 10: riskHour = -10
-      ticket.risk = riskHour
+      ticket.riskHour = riskHour
+      console.log('riskHour',curHour)
       ticket.save().then(() => {})
       
       
