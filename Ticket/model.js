@@ -21,7 +21,6 @@ const Ticket = sequelize.define('ticket', {
   riskHour: {
     type: Sequelize.INTEGER
   }
-
 }, {
   timestamps: false,
   

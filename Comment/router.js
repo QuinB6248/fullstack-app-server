@@ -72,8 +72,6 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
               })
         })
     })
-
-     
   })
   .catch(err => next(err))
 })
@@ -141,17 +139,3 @@ router.delete('/events/:id/tickets/:ticketId/comments/:commentId', auth, (req, r
 module.exports = router
 
 
-
-// const userComment = 
-//             comments
-//               .map(comment => comment.userId)
-//           const countCommentsUser = 
-//             userComment
-//               .reduce(function (allUsersComments, userId) { 
-//                 if (userId in allUsersComments) {
-//                   allUsersComments[userId]++;
-//                 }else {
-//                   allUsersComments[userId] = 1;
-//                 }
-//                 return allUsersComments;
-//               }, {}); 
