@@ -12,7 +12,7 @@ router.get('/events/:id/tickets', (req, res, next) => {
   Ticket
     .findAll({where: {eventId: id}, include: [Event]})
     .then(tickets => {
-      if(!tickets || tickets.length === 0) {
+      if(!tickets ) {
         return res.status(400).send({ message: 'No tickets found' })
       }
       res.send(tickets)

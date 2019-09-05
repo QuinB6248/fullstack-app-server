@@ -7,7 +7,7 @@ const router = new Router()
 
 
 router.get('/events', (req, res, next) => {
-  const limit = req.query.limit || 3
+  const limit = req.query.limit || 15
   const offset = req.query.offset || 0
   const curDate = new Date().toISOString().split('T')[0]
   const Op = Sequelize.Op
