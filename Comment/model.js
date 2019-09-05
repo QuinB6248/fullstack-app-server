@@ -3,7 +3,7 @@ const sequelize = require('../db')
 const User = require('../User/model')
 const Ticket = require('../Ticket/model')
 
-const Comment = sequelize.define('ticket', {
+const Comment = sequelize.define('comment', {
   comment: {
     type: Sequelize.STRING
   }
