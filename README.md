@@ -57,7 +57,7 @@ In terminal run app with nodemon
 
 ## Technologies used
 
-Checkout out: **[technologies.md](./technologies.md)**
+Checkout technologies: **[technologies.md](./technologies.md)**
 
 
 ## Models
