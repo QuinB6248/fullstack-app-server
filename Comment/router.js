@@ -19,6 +19,7 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
       if(!ticket || ticket.eventId !== id) {
         return res.status(400).send({ message: 'No ticket found' })
       }
+      //check the user(Id) of the specific ticket and find all tickets from the same user(Id)
       Ticket
         .findAll({where: {userId: ticket.userId}})
         .then(tickets => {
@@ -27,8 +28,8 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
           //Check how many tickets user has
           const userCount = tickets.map(ticket => ticket.userId)
           const userNumberOfTickets = userCount.length
-          //If user has more then one ticket, 10% will be added to riskStatus
-          userNumberOfTickets > 1? riskStatus += 10 : riskStatus 
+          //If user has only one ticket, 10% will be added to riskStatus
+          userNumberOfTickets > 1? riskStatus  : riskStatus += 10
           //Get percentage of price by dividing it with the average price
           const priceTicket = ticket.price
           const avgPrice = ticket.event.avg_price
