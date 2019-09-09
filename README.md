@@ -17,15 +17,15 @@ Back-end part (REST principles) of a full-stack web-application where users can 
 
 The app has a login and signup page for customers. You need to login to create events, tickets and posting comments.
 Events have:
-•	a name
-•	a description
-•	a picture or logo
-•	a start and end date (could be the same)
+*	a name
+*	a description
+*	a picture or logo
+*	a start and end date (could be the same)
 After you click on an event, you see a list of tickets that are offered for this event.
 A ticket is made for a specific event and has an author (the user that created the ticket). Apart from that, it has:
-•	a picture of the ticket (optional field)
-•	a price
-•	a description
+*	a picture of the ticket (optional field)
+*	a price
+*	a description
 When you click on a ticket, you see the details of that ticket (description/price) and which event it's for. On this page you can add comments as a customer, and everybody can see all the comments.
 A comment has a text and is connected to a specific ticket. It also has an author.
 Anybody can view events and tickets, but you have to login to add a new ticket or comment.
@@ -35,12 +35,12 @@ FRAUD RISK ALGORITHM!
 Tickets can be fraudulent, and as a customer I don't want to buy a fake ticket! So, we show customers the risk that they are taking when buying the ticket.
 
 The percentage is calculated using the following algorithm:
-*if the ticket is the only ticket of the author, add 10%
-*if the ticket price is lower than the average ticket price for that event, that's a risk
-*if a ticket is X% cheaper than the average price, add X% to the risk
-*if a ticket is X% more expensive than the average price, deduct X% from the risk, with a maximum of 10% deduction
-*if the ticket was added during business hours (9-17), deduct 10% from the risk, if not, add 10% to the risk
-*if there are >3 comments on the ticket, add 5% to the risk
+* if the ticket is the only ticket of the author, add 10%
+* if the ticket price is lower than the average ticket price for that event, that's a risk
+* if a ticket is X% cheaper than the average price, add X% to the risk
+* if a ticket is X% more expensive than the average price, deduct X% from the risk, with a maximum of 10% deduction
+* if the ticket was added during business hours (9-17), deduct 10% from the risk, if not, add 10% to the risk
+* if there are >3 comments on the ticket, add 5% to the risk
 The minimal risk is 5% (there's no such thing as no risk) and the maximum risk is 95%.
 
 ## Goal for this project
@@ -48,11 +48,11 @@ The minimal risk is 5% (there's no such thing as no risk) and the maximum risk i
 
 
 ## Getting Started
-Clone the repository: Git clone ...
-Installing dependencies: npm install
-Use Docker in terminal: 
+* Clone the repository: Git clone ...
+* Installing dependencies: npm install (command line)
+* Use Docker in terminal: 
 Run a new container with name and password: docker run -p 5432:5432 --name some-postgres -e POSTGRES_PASSWORD=secret -d postgres
-In terminal run app with nodemon
+* In terminal run app with nodemon
 
 
 ## Technologies used
