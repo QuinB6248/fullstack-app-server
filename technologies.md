@@ -1,60 +1,26 @@
-## TICKETS SERVER
+## Technologies
 
-## Table of contents:
-- **[What this project is about](#what-this-project-is-about)**
-- **[Goal for this project](#goal-for-this-project)**
-- **[Getting Started](#getting-started)**
-- **[Technologies used](#technologies-used)**
-- **[Models](#models)**
-- **[Testing Routes](#testing-routes)**
-- **[Click links to view some samples in this project](#click-links-to-view-some-samples-in-this-project)**
-
-## What this project is about
-
-Back-end part (REST principles) of a full-stack web-application where users can buy and sell tickets for all kinds of events. 
-
-The app has a login and signup page for customers. You need to login to create events, tickets and posting comments.
-Events have:
-•	a name
-•	a description
-•	a picture or logo
-•	a start and end date (could be the same)
-After you click on an event, you see a list of tickets that are offered for this event.
-A ticket is made for a specific event and has an author (the user that created the ticket). Apart from that, it has:
-•	a picture of the ticket (optional field)
-•	a price
-•	a description
-When you click on a ticket, you see the details of that ticket (description/price) and which event it's for. On this page you can add comments as a customer, and everybody can see all the comments.
-A comment has a text and is connected to a specific ticket. It also has an author.
-Anybody can view events and tickets, but you have to login to add a new ticket or comment.
-
-FRAUD RISK ALGORITHM!
-
-Tickets can be fraudulent, and as a customer I don't want to buy a fake ticket! So, we show customers the risk that they are taking when buying the ticket.
-
-The percentage is calculated using the following algorithm:
-•	if the ticket is the only ticket of the author, add 10%
-•	if the ticket price is lower than the average ticket price for that event, that's a risk
-o	if a ticket is X% cheaper than the average price, add X% to the risk
-o	if a ticket is X% more expensive than the average price, deduct X% from the risk, with a maximum of 10% deduction
-•	if the ticket was added during business hours (9-17), deduct 10% from the risk, if not, add 10% to the risk
-•	if there are >3 comments on the ticket, add 5% to the risk
-The minimal risk is 5% (there's no such thing as no risk) and the maximum risk is 95%.
-
-## Goal for this project
-- Making a functional Full-Stack app
+### Table of contents:
+- **[Node.js](#Node.js)**
+- **[npm](#npm)**
+- **[Docker](#Docker)**
+- **[PostgreSQL](#PostgreSQL)**
+- **[express](#express)**
+- **[sequelize](#sequelize)**
+- **[body-parser](#body-parser)**
+- **[cors](#cors)**
+- **[jsonwebtoken](#jsonwebtoken)**
+- **[pg](#pg)**
+- **[nodemon](#nodemon)**
+- **[HTTPie](#HTTPie)**
+- **[REST](#REST)**
 
 
-## Getting Started
-Clone the repository: Git clone ...
-Installing dependencies: npm install
-Use Docker in terminal: 
-Run a new container with name and password: docker run -p 5432:5432 --name some-postgres -e POSTGRES_PASSWORD=secret -d postgres
-In terminal run app with nodemon
+#### Node.js
+Node.js is an open-source, cross-platform, JavaScript run-time environment that executes JavaScript code outside of a browser. Node.js lets developers use JavaScript to write command line tools and for server-side scripting—running scripts server-side to produce dynamic web page content before the page is sent to the user's web browser. Consequently, Node.js represents a "JavaScript everywhere" paradigm, unifying web application development around a single programming language, rather than different languages for server- and client-side scripts.
 
-## Technologies used
-
-Checkout out: **[technologies.md](./technologies.md)**
+#### npm
+npm (originally short for Node Package Manager)is a package manager for the JavaScript programming language. It is the default package manager for the JavaScript runtime environment Node.js. It consists of a command line client, also called npm, and an online database of public and paid-for private packages, called the npm registry. The registry is accessed via the client, and the available packages can be browsed and searched via the npm website.
 
 #### Docker
 tool designed to make it easier to create, deploy, and run applications by using containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one package. By doing so, thanks to the container, the developer can rest assured that the application will run on any other machine regardless of any customized settings that machine might have that could differ from the machine used for writing and testing the code.
@@ -122,22 +88,3 @@ GET — retrieve a specific resource (by id) or a collection of resources
 POST — create a new resource
 PUT — update a specific resource (by id)
 DELETE — remove a specific resource by id
-
-
-## Models
-
-
-## Testing Routes
-##### Signup 
-http POST :4000/signup name=Tommy email='tommy@cat.nl' password=tommy
-##### Login
-http POST :4000/login email='tommy@cat.nl' password=tommy
-##### Test Authorization
-http GET :4000/secret-endpoint Authorization:"Bearer <token>" (testroute for middelware authorization)
-##### Getting All Current Events with limit and offset
-http GET :4000/events
-
-
-#### Click links to view some samples in this project
-
-- **[db](./db.js)**  
