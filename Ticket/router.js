@@ -9,6 +9,8 @@ const router = new Router()
 router.get('/events/:id/tickets', (req, res, next) => {
   const id = parseInt(req.params.id)
   
+ 
+
   Ticket
     .findAll({where: {eventId: id}, include: [Event]})
     .then(tickets => {
