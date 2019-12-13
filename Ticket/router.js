@@ -8,15 +8,10 @@ const router = new Router()
 
 router.get('/events/:id/tickets', (req, res, next) => {
   const id = parseInt(req.params.id)
-
+ 
   Ticket
     .findAll({where: {eventId: id}, include: [Event]})
-    .then(tickets => {
-      if(tickets.length === 0 ) {
-        return res.status(400).send({ message: 'No tickets found' })
-      }
-      res.send(tickets)
-    })
+    .then(tickets => res.send(tickets))
     .catch(err => next(err))
 })
 
