@@ -8,10 +8,14 @@ const router = new Router()
 
 router.get('/events/:id/tickets', (req, res, next) => {
   const id = parseInt(req.params.id)
- 
+  
   Ticket
     .findAll({where: {eventId: id}, include: [Event]})
-    .then(tickets => res.send(tickets))
+    .then(tickets => {
+      Event
+        .findByPk(id)
+        .then(event => res.send({tickets, eventName: event.name}))
+    })
     .catch(err => next(err))
 })
 
@@ -30,15 +34,7 @@ router.post('/events/:id/tickets', auth, (req, res, next) => {
       curHour < 9 || curHour > 17 ? riskHour = 10: riskHour = -10
       ticket.riskHour = riskHour
       ticket.save().then(() => {})
-      Ticket
-        .findAll({where: {eventId: id}, include: [Event]})
-        .then(tickets => {
-          if(!tickets ) {
-          return res.status(400).send({ message: 'No tickets found' })
-          }
-          res.send(tickets[0])
-        })
-        .catch(err => next(err))
+      res.send({ticket})
     })
     .catch(err => next(err))
 })
