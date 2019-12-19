@@ -9,15 +9,12 @@ const router = new Router()
 router.get('/events/:id/tickets', (req, res, next) => {
   const id = parseInt(req.params.id)
   
- 
-
   Ticket
     .findAll({where: {eventId: id}, include: [Event]})
     .then(tickets => {
-      if(!tickets ) {
-        return res.status(400).send({ message: 'No tickets found' })
-      }
-      res.send(tickets)
+      Event
+        .findByPk(id)
+        .then(event => res.send({tickets, eventName: event.name}))
     })
     .catch(err => next(err))
 })
@@ -30,19 +27,14 @@ router.post('/events/:id/tickets', auth, (req, res, next) => {
   Ticket
     .create({...req.body, eventId: id, userId: authUserId})
     .then(ticket => {
-      if(!ticket) {
-        return res.status(400).send({ message: 'No ticket found' })
-      }
       //if the ticket was added during business hours (9-17), deduct 10% from the risk, if not, add 10% to the risk
       const curTime = new Date().toISOString().split('T')[1]
       const curHour = curTime.split(':')[0]
       let riskHour
       curHour < 9 || curHour > 17 ? riskHour = 10: riskHour = -10
       ticket.riskHour = riskHour
-      console.log('riskHour',curHour)
       ticket.save().then(() => {})
-      
-      res.send(ticket)
+      res.send({ticket})
     })
     .catch(err => next(err))
 })
@@ -59,6 +51,7 @@ router.get('/events/:id/tickets/:ticketId', (req, res, next) => {
         return res.status(400).send({ message: 'No ticket found' })
       }
       res.send(ticket)
+      
     })
     .catch(err => next(err))
 })

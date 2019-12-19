@@ -36,6 +36,7 @@ router.post('/login', (req, res, next) => {
 
 //test
 router.get('/secret-endpoint', auth, (req, res) => {
+  console.log('REQ HEADER',req.headers)
   res.send({
     message: `You are visiting the secret endpoint ${req.user.name}.`,
   })
@@ -43,3 +44,14 @@ router.get('/secret-endpoint', auth, (req, res) => {
 
 
 module.exports = router
+
+
+//re authenticate
+
+router.get('/token', (req, res) => {
+  // const token = req.body.token || req.query.token || req.header.token
+  
+  res.send({
+    message: `You are visiting the token endpoint ${req.headers.authorization}.`,
+  })
+})

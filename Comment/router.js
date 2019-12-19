@@ -14,7 +14,7 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
   const ticketId = parseInt(req.params.ticketId)
 
   Ticket
-    .findByPk(ticketId, {where: {eventId: id}, include: [Event]})
+    .findByPk(ticketId, {where: {eventId: id}, include: [Event, User]})
     .then(ticket => {
       if(!ticket || ticket.eventId !== id) {
         return res.status(400).send({ message: 'No ticket found' })
@@ -23,6 +23,7 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
       Ticket
         .findAll({where: {userId: ticket.userId}})
         .then(tickets => {
+          
           //first get the riskHour (added when ticket was posted)
           let riskStatus = ticket.riskHour
           //Check how many tickets user has
@@ -47,15 +48,17 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
           Comment
             .findAll({where: {ticketId: ticketId}, include: [User]})
             .then(comments => {
+              console.log('CHECKINTICKETDETAILS', comments.comment)
               //If there are >3 comments on the ticket, add 5% to the risk
               comments.length > 3? riskStatus += 5 : riskStatus
               riskStatus > 95? riskStatus= 95: riskStatus
               ticket.risk = riskStatus
               ticket.save().then(() => {})
 
-
+              
 
               res.send({
+                userDetails : ticket.user,
                 event:ticket.event, 
                 ticket:{
                 id: ticket.id,
@@ -88,7 +91,20 @@ router.post('/events/:id/tickets/:ticketId/comments', auth, (req, res, next) => 
       if(!comment) {
         return res.status(400).send({ message: 'No comment found' })
       }
-      res.send(comment)
+      User
+        .findByPk(comment.userId)
+        .then(user => {
+          console.log('USERS',comment)
+          res.send({
+            id: comment.id,
+            comment: comment.comment,
+            user: user,
+            ticketId: comment.ticketId,
+            userId: comment.userId
+
+          })
+        })
+        
     })
     .catch(err => next(err))
 })
