@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const Ticket = require('./model')
+const Comment = require('../Comment/model')
 const Event = require('../Event/model')
 const auth = require('../auth/middleware')
 
@@ -93,6 +94,7 @@ router.delete('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
       }else {
         ticket
           .destroy()
+          .then(() => Comment.destroy({where: {ticketId: null}}))
           .then(() => res.send({message: 'Ticket is deleted!'}))
           .catch(err => next(err))
       }
