@@ -1,5 +1,7 @@
 const { Router } = require('express')
 const Event = require('./model')
+const Ticket = require('../Ticket/model')
+const Comment = require('../Comment/model')
 const auth = require('../auth/middleware')
 const Sequelize = require('sequelize')
 
@@ -29,30 +31,30 @@ router.get('/events', (req, res, next) => {
 
 router.post('/events', auth, (req, res, next) => {
   const authUserId = req.user.id
+  if(!req.body.name || !req.body.end || !req.body.start || !req.body.avg_price){
+    res.send({message: "please supply the right input"})
+  }
   Event
     .create({...req.body, userId: authUserId})
     .then(events => {
-      if (!events) {
-        res.status(400).send({ message: 'No events found' })
-      }
+      if (!events) {res.status(400).send({ message: 'No events found' })}
       res.send(events)
     })
     .catch(err => next(err))
 })
 
 
-router.put('/events/:id', (req, res, next) => {
-  const id = req.params.id
+router.patch('/events/:id', auth, (req, res, next) => {
+  const id = parseInt(req.params.id)
+  const authUserId = req.user.id
   Event
     .findByPk(id)
     .then(event => {
-      if(!event){
-        res.status(400).send({ message: 'No event found' })
-      }else {
-        event.update(req.body)
-          .then(event => res.send(event))
-          .catch(err => next(err))
-      }
+      if (event.userId !== authUserId) res.status(401).send({ message: 'You are not authorized' })
+      
+      event
+        .update(req.body)
+        .then(event => res.send(event))
     })
     .catch(err => next(err))
 })
@@ -61,17 +63,11 @@ router.put('/events/:id', (req, res, next) => {
 router.delete('/events/:id', auth, (req, res, next) => {
   const id = req.params.id
   Event
-    .findByPk(id)
-    .then(event => {
-      if (event && event.userId === req.user.id) {
-        event
-          .destroy()
-          .then(() => res.send({message: 'Event is deleted!'}))
-      }else {
-        res.status(404).json({message: `event does not exist, or does not belong to authenticated user`})
-      }
-    })
+    .destroy({where: {id: id, userId: req.user.id}})
+    .then(() => Ticket.destroy({where: {eventId: id}}))
+    .then(() => Comment.destroy({where: {ticketId: null}}))
+    .then(() => res.send({message: 'Event is deleted!'}))
     .catch(error => next(error))
-})
+  })
 
 module.exports = router
