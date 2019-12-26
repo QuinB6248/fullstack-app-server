@@ -23,7 +23,13 @@ router.post('/login', (req, res, next) => {
           res.status(400).send({ message: 'Name or password was incorrect' })
         }
         if (bcrypt.compareSync(req.body.password, user.password)) {
-          res.send({ jwt: toJWT({ userId: user.id }) })
+          
+
+
+
+          const generateToken = toJWT({ userId: user.id })
+          res.cookie('jwt',generateToken, { httpOnly: true, maxAge: 3600000 })
+          res.send({ jwt: generateToken })
         }else {
           res.status(400).send({ message: 'Name or password was incorrect' })
         }
@@ -36,7 +42,7 @@ router.post('/login', (req, res, next) => {
 
 //test
 router.get('/secret-endpoint', auth, (req, res) => {
-  console.log('REQ HEADER',req.headers)
+  console.log('REQ HEADER',req.cookies)
   res.send({
     message: `You are visiting the secret endpoint ${req.user.name}.`,
   })
