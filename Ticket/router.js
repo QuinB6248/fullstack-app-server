@@ -6,7 +6,7 @@ const auth = require('../auth/middleware')
 
 const router = new Router()
 
-
+//GET TICKETS
 router.get('/events/:id/tickets', (req, res, next) => {
   const id = parseInt(req.params.id)
   
@@ -20,7 +20,7 @@ router.get('/events/:id/tickets', (req, res, next) => {
     .catch(err => next(err))
 })
 
-
+//CREATE TICKET
 router.post('/events/:id/tickets', auth, (req, res, next) => {
   const id = parseInt(req.params.id)
   const authUserId = req.user.id
@@ -40,7 +40,7 @@ router.post('/events/:id/tickets', auth, (req, res, next) => {
     .catch(err => next(err))
 })
 
-
+//GET TICKET
 router.get('/events/:id/tickets/:ticketId', (req, res, next) => {
   const id = parseInt(req.params.id) 
   const ticketId = parseInt(req.params.ticketId)
@@ -57,7 +57,7 @@ router.get('/events/:id/tickets/:ticketId', (req, res, next) => {
     .catch(err => next(err))
 })
 
-
+//UPDATE TICKET
 router.patch('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
   const id = parseInt(req.params.id) 
   const ticketId = parseInt(req.params.ticketId)
@@ -79,7 +79,7 @@ router.patch('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
       .catch(err => next(err))
 })
 
-
+//DELETE TICKET
 router.delete('/events/:id/tickets/:ticketId', auth, (req, res, next) => {
   const id = parseInt(req.params.id) 
   const ticketId = parseInt(req.params.ticketId)
