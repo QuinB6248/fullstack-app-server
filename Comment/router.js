@@ -9,6 +9,7 @@ const Event = require('../Event/model')
 
 const router = new Router()
 
+//GET TICKET WITH COMMENTS
 router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
   const id = parseInt(req.params.id) 
   const ticketId = parseInt(req.params.ticketId)
@@ -41,14 +42,12 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
           priceDif < -10 ? priceDif = -10 : priceDif
           //Add (or subtract) amount of risk (riskStatus)
           riskStatus += priceDif
-          console.log('RISKStatus', riskStatus)
           //Check if riskStatus is not higher then 95% or lower then 5%
           riskStatus > 95? riskStatus=95 : riskStatus < 5? riskStatus=5 : riskStatus
         
           Comment
             .findAll({where: {ticketId: ticketId}, include: [User]})
             .then(comments => {
-              console.log('CHECKINTICKETDETAILS', comments.comment)
               //If there are >3 comments on the ticket, add 5% to the risk
               comments.length > 3? riskStatus += 5 : riskStatus
               riskStatus > 95? riskStatus= 95: riskStatus
@@ -80,6 +79,7 @@ router.get('/events/:id/tickets/:ticketId/comments', (req, res, next) => {
   .catch(err => next(err))
 })
 
+//CREATE COMMENT
 router.post('/events/:id/tickets/:ticketId/comments', auth, (req, res, next) => {
   const id = parseInt(req.params.id) 
   const ticketId = parseInt(req.params.ticketId)
@@ -109,6 +109,7 @@ router.post('/events/:id/tickets/:ticketId/comments', auth, (req, res, next) => 
     .catch(err => next(err))
 })
 
+//UPDATE COMMENT
 router.patch('/events/:id/tickets/:ticketId/comments/:commentId', auth, (req, res, next) => {
   const ticketId = parseInt(req.params.ticketId)
   const commentId = parseInt(req.params.commentId)
@@ -131,6 +132,7 @@ router.patch('/events/:id/tickets/:ticketId/comments/:commentId', auth, (req, re
       .catch(err => next(err))
 })
 
+//DELETE COMMENT
 router.delete('/events/:id/tickets/:ticketId/comments/:commentId', auth, (req, res, next) => {
   const ticketId = parseInt(req.params.ticketId)
   const commentId = parseInt(req.params.commentId)

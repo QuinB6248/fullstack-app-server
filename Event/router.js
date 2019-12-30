@@ -8,16 +8,17 @@ const User = require('../User/model')
 
 const router = new Router()
 
-
+//GET EVENTS
 router.get('/events', (req, res, next) => {
   const limit = req.query.limit || 5
   const offset = req.query.offset || 0
   const curDate = new Date().toISOString().split('T')[0]
   const Op = Sequelize.Op
-
+ 
   Promise.all([
     Event.count(),
-    Event.findAll({ limit, offset, where: {end: {[Op.gte]: curDate}}, include: [ User] }) // sequelize operator gte = greater or equel then current date
+    Event.findAll({ limit, offset, where: {end: {[Op.gte]: curDate}}, include: [ User] }),// sequelize operator gte = greater or equel then current date
+    
   ])
     .then(([total, events]) => {
       if (!events) {
@@ -29,7 +30,7 @@ router.get('/events', (req, res, next) => {
     .catch(err => next(err))
 })
 
-
+//CREATE EVENT
 router.post('/events', auth, (req, res, next) => {
   const authUserId = req.user.id
   const authUser = req.user
@@ -56,7 +57,7 @@ router.post('/events', auth, (req, res, next) => {
     .catch(err => next(err))
 })
 
-
+//UPDATE EVENT
 router.patch('/events/:id', auth, (req, res, next) => {
   const id = parseInt(req.params.id)
   const authUserId = req.user.id
@@ -66,11 +67,9 @@ router.patch('/events/:id', auth, (req, res, next) => {
     .findByPk(id)
     .then(event => {
       if (event.userId !== authUserId) res.status(401).send({ message: 'You are not authorized' })
-      console.log('BODY', req.body)
       event
         .update(req.body)
         .then(event => {
-          console.log('NEWWW', event)
           res.send({
             id: event.id,
             name: event.name,
