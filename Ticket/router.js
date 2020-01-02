@@ -11,7 +11,7 @@ router.get('/events/:id/tickets', (req, res, next) => {
   const id = parseInt(req.params.id)
   
   Ticket
-    .findAll({where: {eventId: id}, include: [Event]})
+    .findAll({where: {eventId: id}, include: [Event], order:[['id', 'DESC']]})
     .then(tickets => {
       Event
         .findByPk(id)
@@ -49,7 +49,7 @@ router.get('/events/:id/tickets/:ticketId', (req, res, next) => {
     .findByPk(ticketId, {where: {eventId: id}})
     .then(ticket => {
       if(!ticket || ticket.eventId !== id) {
-        return res.status(400).send({ message: 'No ticket found' })
+        return res.status(404).send({ message: 'No ticket found' })
       }
       res.send(ticket)
       

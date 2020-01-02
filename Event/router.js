@@ -17,12 +17,12 @@ router.get('/events', (req, res, next) => {
  
   Promise.all([
     Event.count(),
-    Event.findAll({ limit, offset, where: {end: {[Op.gte]: curDate}}, include: [ User] }),// sequelize operator gte = greater or equel then current date
+    Event.findAll({ limit, offset, where: {end: {[Op.gte]: curDate}}, order:[['id', 'DESC']], include: [ User] }),// sequelize operator gte = greater or equel then current date
     
   ])
     .then(([total, events]) => {
       if (!events) {
-        res.status(400).send({ message: 'No events found' })
+        res.status(404).send({ message: 'No events found' })
       }
       const numOfPages = Math.ceil(total / limit)
       res.send({events, total, numOfPages})
@@ -34,13 +34,21 @@ router.get('/events', (req, res, next) => {
 router.post('/events', auth, (req, res, next) => {
   const authUserId = req.user.id
   const authUser = req.user
+  const curDate = new Date().toISOString().split('T')[0]
+ 
   if(!req.body.name || !req.body.end || !req.body.start || !req.body.avg_price){
-    res.send({message: "please supply the right input"})
+    return res.send({message: "please supply the right input"})
+  } 
+  if(req.body.end <  curDate){
+    return res.send({message: "date is already been"})
   }
+ 
   Event
     .create({...req.body, userId: authUserId})
     .then(events => {
-      if (!events) {res.status(400).send({ message: 'No events found' })}
+      if (!events) {
+        return res.status(400).send({ message: 'No events created' })
+      }
       res.send({
         id: events.id,
         name: events.name,
@@ -66,7 +74,9 @@ router.patch('/events/:id', auth, (req, res, next) => {
   Event
     .findByPk(id)
     .then(event => {
-      if (event.userId !== authUserId) res.status(401).send({ message: 'You are not authorized' })
+      if (event.userId !== authUserId) {
+        return res.status(401).send({ message: 'You are not authorized' })
+      }
       event
         .update(req.body)
         .then(event => {
@@ -91,11 +101,13 @@ router.patch('/events/:id', auth, (req, res, next) => {
 router.delete('/events/:id', auth, (req, res, next) => {
   const id = req.params.id
   const authUserId = req.user.id
-
+console.log('AUTHUSERID',authUserId)
   Event
   .findByPk(id)
   .then(event => {
-    if (event.userId !== authUserId) res.status(401).send({ message: 'You are not authorized' })
+    if (event.userId !== authUserId) {
+      return res.status(401).send({ message: 'You are not authorized' })
+    }
     
     event
       .destroy()

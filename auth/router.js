@@ -24,9 +24,10 @@ router.post('/login', (req, res, next) => {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           const generateToken = toJWT({ userId: user.id })
           res
-            //.header("Access-Control-Allow-Credentials", true)
-            .cookie('jwt', generateToken , { maxAge: 7200000, httpOnly: true, sameSite: "none"})
-            .send({ jwt: generateToken })
+            // .header("Access-Control-Allow-Credentials", true)
+            .cookie('name', user.name , { maxAge: 7200000})
+            .cookie('jwt', generateToken , { maxAge: 7200000, httpOnly: true })
+            .send({ jwt: generateToken})
   }else {
           res.status(400).send({ message: 'Name or password was incorrect' })
         }
@@ -44,14 +45,18 @@ router.get('/secret-endpoint', auth, (req, res) => {
 })
 
 
-router.get('/cookie',function(req, res){
-  res.cookie('jwt', '1');
+router.post('/cookie',function(req, res){
+  res
+    .cookie('jwt', req.body.cookieToken, { maxAge: 7200000, httpOnly: true})
+    .send({ jwt:'token' })
 })
 
 router.get('/clearcookie', function(req,res){
   res
   .clearCookie('jwt', {path:'/'})
-  .send('Cookie deleted');
+  .clearCookie('name', {path:'/'})
+  .clearCookie('hi', {path:'/'})
+  .send(false);
 })
 
 router.get('/', function(req, res) {
