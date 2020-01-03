@@ -16,7 +16,11 @@ const jsonParser = bodyParser.json()
 
 
 
-app.use(cors())
+app.use(cors({
+  //origin: "https://hungry-jang-521769.netlify.com",
+  origin: "http://localhost:3000",
+  credentials: true,
+}))
 app.use(jsonParser)
 app.use(cookieParser())
 app.use(authRouter)

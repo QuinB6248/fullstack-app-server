@@ -94,7 +94,6 @@ router.post('/events/:id/tickets/:ticketId/comments', auth, (req, res, next) => 
       User
         .findByPk(comment.userId)
         .then(user => {
-          console.log('USERS',comment)
           res.send({
             id: comment.id,
             comment: comment.comment,
