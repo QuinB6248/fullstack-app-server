@@ -10,14 +10,31 @@ const router = new Router()
 
 //GET EVENTS
 router.get('/events', (req, res, next) => {
-  const limit = req.query.limit || 5
+  const limit = req.query.limit || 20
   const offset = req.query.offset || 0
   const curDate = new Date().toISOString().split('T')[0]
   const Op = Sequelize.Op
+  const queryKeyValue = {}
+  const queryUserName = {}
+ console.log('QUERIES',  req.query)
+  const keyOfObject = Object.keys(req.query)
+  keyOfObject.filter(el => {
+    if(el === 'limit' || el === 'offset' || req.query[el] === 'false') {
+      return
+    }
+    if(el === 'user' ) {
+      return queryUserName['name'] =  { [Op.iLike]:`%${req.query[el]}%`}
+      //return queryUserName['name'] = req.query[el]
+    }
+    return queryKeyValue[el] = { [Op.iLike]:`%${req.query[el]}%`}
+    //return queryKeyValue[el] = req.query[el]
+  })
+  console.log('QUERyKEyVal',  queryKeyValue)
+  console.log('QUERyUSERNAME',  queryUserName)
  
   Promise.all([
     Event.count(),
-    Event.findAll({ limit, offset, where: {end: {[Op.gte]: curDate}}, order:[['id', 'DESC']], include: [ User] }),// sequelize operator gte = greater or equel then current date
+    Event.findAll({ limit, offset, where: {end: {[Op.gte]: curDate}}, where: queryKeyValue, order:[['id', 'DESC']], include: [{ model: User, where:queryUserName}] }),// sequelize operator gte = greater or equel then current date
     
   ])
     .then(([total, events]) => {
@@ -29,6 +46,9 @@ router.get('/events', (req, res, next) => {
     })
     .catch(err => next(err))
 })
+
+
+
 
 //CREATE EVENT
 router.post('/events', auth, (req, res, next) => {
