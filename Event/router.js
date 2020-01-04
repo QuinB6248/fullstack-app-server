@@ -16,21 +16,17 @@ router.get('/events', (req, res, next) => {
   const Op = Sequelize.Op
   const queryKeyValue = {}
   const queryUserName = {}
- console.log('QUERIES',  req.query)
   const keyOfObject = Object.keys(req.query)
+  
   keyOfObject.filter(el => {
     if(el === 'limit' || el === 'offset' || req.query[el] === 'false') {
       return
     }
     if(el === 'user' ) {
       return queryUserName['name'] =  { [Op.iLike]:`%${req.query[el]}%`}
-      //return queryUserName['name'] = req.query[el]
     }
     return queryKeyValue[el] = { [Op.iLike]:`%${req.query[el]}%`}
-    //return queryKeyValue[el] = req.query[el]
   })
-  console.log('QUERyKEyVal',  queryKeyValue)
-  console.log('QUERyUSERNAME',  queryUserName)
  
   Promise.all([
     Event.count(),
