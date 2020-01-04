@@ -17,8 +17,8 @@ const jsonParser = bodyParser.json()
 
 
 app.use(cors({
-  origin: "https://hungry-jang-521769.netlify.com",
-  //origin: "http://localhost:3000",
+  //origin: "https://hungry-jang-521769.netlify.com",
+  origin: "http://localhost:3000",
   credentials: true,
 }))
 app.use(jsonParser)
