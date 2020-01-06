@@ -25,8 +25,8 @@ router.post('/login', (req, res, next) => {
           const generateToken = toJWT({ userId: user.id })
           res
             // .header("Access-Control-Allow-Credentials", true)
-            .cookie('name', user.name , { maxAge: 7200000, sameSite: 'None', secure: true})
-            .cookie('jwt', generateToken , { maxAge: 7200000, httpOnly: true, sameSite: 'None', secure: true })
+            .cookie('name', user.name , { maxAge: 7200000})
+            .cookie('jwt', generateToken , { maxAge: 7200000, httpOnly: true})
             .send({ jwt: generateToken})
   }else {
           res.status(400).send({ message: 'Name or password was incorrect' })
