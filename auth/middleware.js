@@ -3,17 +3,11 @@ const { toData } = require('./jwt')
 
 
 function auth(req, res, next) {
-  ////FOR TESTING WITH HTTPIE//////set const data = toData(auth[1])
   // A user is able to authenticate using an `Authorization` header with a `Bearer <JWT>`
-  //const auth = req.headers.authorization && req.headers.authorization.split(' ')
-  //if (auth && auth[0] === 'Bearer' && auth[1]) {
- 
-  ///// user is able to authenticate using the JWT token in cookie send by client/browser
-  const cookieToken = req.cookies.jwt
-
-  if (cookieToken) {
+  const auth = req.headers.authorization && req.headers.authorization.split(' ')
+  if (auth && auth[0] === 'Bearer' && auth[1]) {
     try {
-      const data = toData(cookieToken)
+      const data = toData(auth[1])
       User
         .findByPk(data.userId)
         .then(user => {

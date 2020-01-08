@@ -3,12 +3,15 @@ const { toJWT } = require('./jwt')
 const bcrypt = require('bcrypt')
 const User = require('../User/model')
 const auth = require('./middleware')
+const Token = require('./model')
 
 const router = new Router()
 
 //login router: user enters email and password, find user with matching email in database, compares password with encrypted one, 
 router.post('/login', (req, res, next) => {
   const { email, password } = req.body
+  Token.destroy({where: {}})
+        
   if (!email || !password) {
     res.status(400).send({
       message: 'Please supply a valid email and password'
@@ -23,12 +26,11 @@ router.post('/login', (req, res, next) => {
         }
         if (bcrypt.compareSync(req.body.password, user.password)) {
           const generateToken = toJWT({ userId: user.id })
-          res
-            // .header("Access-Control-Allow-Credentials", true)
-            .cookie('name', user.name , { maxAge: 7200000})
-            .cookie('jwt', generateToken , { maxAge: 7200000, httpOnly: true})
-            .send({ jwt: generateToken})
-  }else {
+          
+          Token.create({id: 1, name: user.name, token: generateToken})
+          .then(token =>res.send({jwt: token.token, name: token.name}))
+          .catch(err => next(err))
+        }else {
           res.status(400).send({ message: 'Name or password was incorrect' })
         }
       })
@@ -36,27 +38,34 @@ router.post('/login', (req, res, next) => {
   }
 })
  
+////////////CLEAR AND GET TOKENS/////////////////////
+router.get('/cleartoken', function(req,res){
+  Token.destroy({where: {}})
+  res
+  .send(false);
+})
 
-///////test token and cookies
+router.get('/gettoken', function(req,res){
+  Token.findAll()
+  .then(token => {
+    res.send({name: token[0].name, token: token[0].token})
+  })
+  .catch(err => next(err))
+})
+
+
+
+///////TEST TOKENS/COOKIES////////
 router.get('/secret-endpoint', auth, (req, res) => {
   res.send({
     message: `You are visiting the secret endpoint ${req.user.name}.`,
   })
 })
 
-
 router.post('/cookie',function(req, res){
   res
     .cookie('jwt', req.body.cookieToken, { maxAge: 7200000, httpOnly: true})
     .send({ jwt:'token' })
-})
-
-router.get('/clearcookie', function(req,res){
-  res
-  .clearCookie('jwt', {path:'/'})
-  .clearCookie('name', {path:'/'})
-  .clearCookie('hi', {path:'/'})
-  .send(false);
 })
 
 router.get('/', function(req, res) {
@@ -65,6 +74,6 @@ router.get('/', function(req, res) {
    Cookies: req.cookies,
   })
 })
-
+////////////////////////////////
 
 module.exports = router
