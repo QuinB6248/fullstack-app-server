@@ -28,7 +28,7 @@ router.post('/login', (req, res, next) => {
           const generateToken = toJWT({ userId: user.id })
           
           Token.create({id: 1, name: user.name, token: generateToken})
-          .then(token =>res.send({jwt: token.token, name: token.name}))
+          .then(token =>res.send({token: token.token, name: token.name}))
           .catch(err => next(err))
         }else {
           res.status(400).send({ message: 'Name or password was incorrect' })
@@ -49,11 +49,18 @@ router.get('/gettoken', function(req,res){
   Token.findAll()
   .then(token => {
     res.send({name: token[0].name, token: token[0].token})
+    
   })
   .catch(err => next(err))
 })
 
-
+router.get('/authtoken', auth, function(req,res){
+ if (!req.user) {
+   return res.send(false)
+  }else {
+    return res.send(true)
+  }
+})
 
 ///////TEST TOKENS/COOKIES////////
 router.get('/secret-endpoint', auth, (req, res) => {

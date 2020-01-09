@@ -12,6 +12,7 @@ function auth(req, res, next) {
         .findByPk(data.userId)
         .then(user => {
           if (!user) {
+            res.send(false)
             return next('User does not exist')
           }
           req.user = user 
@@ -20,7 +21,8 @@ function auth(req, res, next) {
         .catch(next)
     }
     catch(error) {
-      res.status(400).send({ message: `Error ${error.name}: ${error.message}`, })
+      res.send(false)
+      //res.status(400).send({ message: `Error ${error.name}: ${error.message}`, })
     }
   }else {
     res.status(401).send({ message: 'Please supply some valid credentials' })
