@@ -51,8 +51,11 @@ router.delete('/cleartoken/:id', function(req,res){
     .catch(err => next(err))
 })
 
-router.get('/gettoken/:id', function(req,res){
-  const id = parseInt(req.params.id)
+router.get('/gettoken', function(req,res){
+  const id = req.query.id
+  if (id === false){
+    return res.send(false)
+  }
   Token.findByPk(id)
   .then(token => {
     res.send({id:token.id, name: token.name, token: token.token})
