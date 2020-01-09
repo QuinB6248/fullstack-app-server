@@ -27,8 +27,8 @@ router.post('/login', (req, res, next) => {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           const generateToken = toJWT({ userId: user.id })
           
-          Token.create({id: 1, name: user.name, token: generateToken})
-          .then(token =>res.send({token: token.token, name: token.name}))
+          Token.create({ name: user.name, token: generateToken})
+          .then(token =>res.send({id: token.id, token: token.token, name: token.name}))
           .catch(err => next(err))
         }else {
           res.status(400).send({ message: 'Name or password was incorrect' })
@@ -39,17 +39,23 @@ router.post('/login', (req, res, next) => {
 })
  
 ////////////CLEAR AND GET TOKENS/////////////////////
-router.get('/cleartoken', function(req,res){
-  Token.destroy({where: {}})
-  res
-  .send(false);
+router.delete('/cleartoken/:id', function(req,res){
+  const id = parseInt(req.params.id)
+  
+  Token
+    .findByPk(id)
+    .then(token => {
+      token.destroy()
+      res.send(false)
+    })
+    .catch(err => next(err))
 })
 
-router.get('/gettoken', function(req,res){
-  Token.findAll()
+router.get('/gettoken/:id', function(req,res){
+  const id = parseInt(req.params.id)
+  Token.findByPk(id)
   .then(token => {
-    res.send({name: token[0].name, token: token[0].token})
-    
+    res.send({id:token.id, name: token.name, token: token.token})
   })
   .catch(err => next(err))
 })
