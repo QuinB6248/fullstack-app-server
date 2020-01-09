@@ -17,9 +17,9 @@ const jsonParser = bodyParser.json()
 
 
 app.use(cors({
-  origin: "https://zen-mclean-ac17d9.netlify.com",
+  //origin: "https://zen-mclean-ac17d9.netlify.com",
   //origin: "http://localhost:3000",
-  credentials: true,
+  //credentials: true,
 }))
 app.use(jsonParser)
 app.use(cookieParser())
