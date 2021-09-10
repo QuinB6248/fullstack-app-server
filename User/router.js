@@ -11,6 +11,7 @@ router.post('/signup', (req, res, next) => {
     return res.status(400).send({ message: 'Please fill in a name, password and email' })
   }else {
     const user = { name, email, password: bcrypt.hashSync(password, 10) }
+    console.log("USERRR", user)
     User
       .create(user)
       .then(user => {
