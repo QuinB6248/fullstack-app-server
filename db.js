@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const databaseUrl = process.env.DATABASE_URL || 'postgres://postgres:secret@localhost:5432/postgres'
+const databaseUrl = process.env.DATABASE_URL || 'postgres://nvmpvlig:J_RJ43B-podqX4b64mtMCUG1LBH-NWR2@dumbo.db.elephantsql.com/nvmpvlig'
 //Sequelizeconstructor takes the connectionstring as argument
 const sequelize = new Sequelize(databaseUrl)
 
